@@ -1,0 +1,4 @@
+django==4.0
+python-dotenv==0.20.0
+docker==5.0.3
+docker-compose==1.29.2
