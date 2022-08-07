@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table>
+        <th>user id</th>
+        <th>first name</th>
+        <th>second name</th>
+        <th>is included</th>
+
+        {% for user in list %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.second_name }}</td>
+                <td>{{ user.is_included }}</td>
+            </tr>
+        {% endfor %}
+
+</table>
+
+{% endblock content %}

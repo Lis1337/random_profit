@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table>
+        <th>pair id</th>
+        <th>first user</th>
+        <th>second user</th>
+        <th>meet happened</th>
+
+        {% for pair in pairs %}
+            <tr>
+                <td>{{ pair.id }}</td>
+                <td>{{ pair.first_user }}</td>
+                <td>{{ pair.second_user }}</td>
+                <td>{{ pair.meet_happened }}</td>
+            </tr>
+        {% endfor %}
+
+</table>
+
+{% endblock content %}
