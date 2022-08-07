@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import User, Round, Pairs
+import random
 
 
 
@@ -30,48 +31,36 @@ def make_round(request):
     dated_pairs = Pairs.objects.all()
 
     next_round = []
-    for first_user in participants:
-        for second_user in participants:
+    for user in participants:
+        next_round.append(user.first_name + '_' + user.second_name)
 
-            first_user_concatenated_name = first_user.first_name + '_' + first_user.second_name
-            second_user_concatenated_name = second_user.first_name + '_' + second_user.second_name
+    result = []
+    amount_of_loops = len(next_round) // 2
+    i = 0
+    while i <= amount_of_loops:
 
-            first_dated_pair_exists = dated_pairs.filter(
-                first_user=first_user_concatenated_name, 
-                second_user=second_user_concatenated_name
-                ).exists()
-            second_dated_pair_exists = dated_pairs.filter(
-                first_user=second_user_concatenated_name, 
-                second_user=first_user_concatenated_name
-                ).exists()
+        first_user = next_round.pop()
+        second_user = None
 
-            first_pair = [
-                first_user_concatenated_name, 
-                second_user_concatenated_name
-                ]
-            second_pair = [
-                second_user_concatenated_name, 
-                first_user_concatenated_name
-                ]
+        for second in next_round:
+            pairs_exists = (
+                dated_pairs.filter(first_user=first_user, second_user=second).exists() or
+                dated_pairs.filter(first_user=second, second_user=first_user).exists()
+            )
 
-            pair_string = first_user_concatenated_name + ':' + second_user_concatenated_name
-            pair_string_reversed = second_user_concatenated_name + ':' + first_user_concatenated_name
-
-            if (
-                (first_user != second_user) and
-                ((not first_dated_pair_exists) and (not second_dated_pair_exists)) and 
-                ((first_pair not in next_round) and (second_pair not in next_round)) and
-                (pair_string not in next_round and pair_string_reversed not in next_round)
-            ):
-                next_round.append(pair_string)
+            if ((first_user != second) and (not pairs_exists)):
+                second_user = second
+                break
 
 
-    return render(request, 'base.html', {"round": next_round})
+        if ((second_user is not None) and (first_user != second_user)):
+            result.append(first_user + ':' + second_user)
+            next_round.remove(second_user)
+        else:
+            result.append(first_user + ':' + 'Ann_Machneva')
 
-
-def add_is_possible(next_round: list) -> bool:
-    possible = False
+        i += 1
 
 
 
-    return possible
+    return render(request, 'base.html', {"round": result,})
