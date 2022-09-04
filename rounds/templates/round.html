@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for pair in round %}
+        {{ forloop.counter }}. {{ pair }}
+        <br>
+    {% endfor %}
+
+{% endblock %}

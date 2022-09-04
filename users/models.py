@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.db import models
 
 
@@ -8,13 +7,7 @@ class User(models.Model):
     is_included = models.BooleanField(default=True)
 
 
-class Round(models.Model):
-    participants = models.JSONField()
-    starts_at = models.DateTimeField()
-    ends_at = models.DateTimeField()
-
-
 class Pairs(models.Model):
-    first_user = models.CharField(max_length=255)
-    second_user = models.CharField(max_length=255)
+    first_user = models.ForeignKey(User, null=False, related_name='first_user', on_delete=models.CASCADE)
+    second_user = models.ForeignKey(User, null=False, related_name='second_user', on_delete=models.CASCADE)
     meet_happened = models.BooleanField(default=True)

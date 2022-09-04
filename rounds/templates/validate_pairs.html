@@ -1,0 +1,47 @@
+<form action="save" method="post">
+    {% csrf_token %}
+    <table> 
+        <tr>
+            <td>
+                id
+            </td>
+            <td>
+                First user
+            </td>
+            <td>
+                Second user
+            </td>
+        </tr>
+
+
+        {% for pair in round %}
+        
+        <tr>
+            <td>
+                {{ forloop.counter }}.
+            </td>
+            <td>
+                <input id="first_user" type="text" name="first_user" maxlength="30" size="30" required 
+                value="{{ pair.0.id }}"
+                readonly>
+            </td>
+            <td>
+                <input id="second_user" type="text" name="second_user" maxlength="30" size="30" required 
+                value="{{ pair.1.id }}"
+                readonly>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <p>
+        Starts at: <input id="starts_at" type="date" name="starts_at" value="2022-09-01">
+    </p>
+    <p>
+        Ends at: <input id="ends_at" type="date" name="ends_at" value="2022-09-01">
+    </p>
+    <p>
+        <input type="submit" value="save round">
+    </p>
+</form>
