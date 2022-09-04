@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table>
+        <th>round id</th>
+        <th>participants</th>
+        <th>starts at</th>
+        <th>ends at</th>
+
+        {% for round in rounds %}
+            <tr>
+                <td>{{ round.id }}</td>
+                <td>{{ round.participants }}</td>
+                <td>{{ user.starts_at }}</td>
+                <td>{{ user.ends_at }}</td>
+            </tr>
+        {% endfor %}
+
+</table>
+
+{% endblock content %}
