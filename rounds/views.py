@@ -19,6 +19,7 @@ def make_round():
 
     result = []
     amount_of_loops = len(next_round) // 2
+    users_with_no_pair = []
     i = 0
     while i <= amount_of_loops:
 
@@ -42,11 +43,17 @@ def make_round():
                 #add to pairs here
                 next_round.remove(second_user)
             else:
-                result.append([first_user, users.filter(first_name = 'Анна', second_name = 'Махнева')])
+                users_with_no_pair.append(first_user)
+                # result.append([first_user, User.objects.get(id=64)]) добавление Ани Махнёвой
 
         i += 1
 
+    if (len(users_with_no_pair) > 0):
+        remainders = distribute_remainders(users_with_no_pair, dated_pairs)
+        result += remainders
+
     return result
+
 
 def get_round(request, round_id):
     round_json = Round.objects.get(id=round_id).participants
@@ -69,6 +76,7 @@ def validate_round(request):
 
 
     return render(request, 'validate_pairs.html', {'form': form, 'round': round})
+
 
 def save(request):
     first_user_ids = request.POST.getlist('first_user')
@@ -96,3 +104,27 @@ def save(request):
     round_id = (Round.objects.last()).id
 
     return HttpResponseRedirect('/rounds/{:n}'.format(round_id))
+
+
+def distribute_remainders(users_with_no_pair: list, dated_pairs):
+    result = []
+    no_pair_amount = len(users_with_no_pair)
+
+    x = 0
+    if (no_pair_amount == 1):
+        result.append([users_with_no_pair[x], User.objects.get(id=64)])
+
+    elif (no_pair_amount > 1):
+        if ((no_pair_amount % 2) == 1):
+            result.append([users_with_no_pair.pop(), User.object.get(id=64)])
+
+        
+        while (x + 1) <= no_pair_amount:
+            if (not dated_pairs.filter(first_user=users_with_no_pair[x], second_user=[x+1]).exists()):
+                result.append([users_with_no_pair[x], users_with_no_pair[x+1]])
+            else:
+                result.append([users_with_no_pair[x], User.objects.get(id=64)])
+                result.append([users_with_no_pair[x+1], User.objects.get(id=64)])
+
+    return result
+
