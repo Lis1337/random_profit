@@ -29,18 +29,17 @@ def make_round():
 
             for second in next_round:
                 pairs_exists = (
-                    dated_pairs.filter(first_user=first_user, second_user=second).exists() or
-                    dated_pairs.filter(first_user=second, second_user=first_user).exists()
+                        dated_pairs.filter(first_user=first_user, second_user=second).exists() or
+                        dated_pairs.filter(first_user=second, second_user=first_user).exists()
                 )
 
-                if ((first_user != second) and (not pairs_exists)):
+                if (first_user != second) and (not pairs_exists):
                     second_user = second
                     break
 
-
-            if ((second_user is not None) and (first_user != second_user)):
+            if (second_user is not None) and (first_user != second_user):
                 result.append([first_user, second_user])
-                #add to pairs here
+                # add to pairs here
                 next_round.remove(second_user)
             else:
                 users_with_no_pair.append(first_user)
@@ -48,11 +47,11 @@ def make_round():
 
         i += 1
 
-    if (len(users_with_no_pair) > 0):
-        remainders = distribute_remainders(users_with_no_pair, dated_pairs)
-        result += remainders
+    # if len(users_with_no_pair) > 0:
+    #     remainders = distribute_remainders(users_with_no_pair, dated_pairs)
+    #     result += remainders
 
-    return result
+    return result, users_with_no_pair
 
 
 def get_round(request, round_id):
@@ -63,7 +62,7 @@ def get_round(request, round_id):
 
 
 def validate_round(request):
-    round = make_round()
+    round, users_with_no_pair = make_round()
 
     if request.method == 'POST':
         form = PairForm(request.POST)
@@ -74,8 +73,12 @@ def validate_round(request):
     else:
         form = PairForm()
 
-
-    return render(request, 'validate_pairs.html', {'form': form, 'round': round})
+    return render(request, 'validate_pairs.html',
+                  {
+                      'form': form,
+                      'round': round,
+                      'users_with_no_pair': users_with_no_pair
+                  })
 
 
 def save(request):
@@ -106,25 +109,29 @@ def save(request):
     return HttpResponseRedirect('/rounds/{:n}'.format(round_id))
 
 
-def distribute_remainders(users_with_no_pair: list, dated_pairs):
+def distribute_remainders(users_with_no_pair: list | None, dated_pairs):
     result = []
     no_pair_amount = len(users_with_no_pair)
 
     x = 0
-    if (no_pair_amount == 1):
+    if no_pair_amount == 1:
         result.append([users_with_no_pair[x], User.objects.get(id=64)])
 
-    elif (no_pair_amount > 1):
-        if ((no_pair_amount % 2) == 1):
-            result.append([users_with_no_pair.pop(), User.object.get(id=64)])
+    elif no_pair_amount > 1:
+        if (no_pair_amount % 2) == 0:
+            for users in users_with_no_pair:
+                if not dated_pairs.filter(first_user=users_with_no_pair[x],
+                                          second_user=users_with_no_pair[x + 1]).exists():
+                    result.append([users_with_no_pair[x], users_with_no_pair[x + 1]])
 
-        
-        while (x + 1) <= no_pair_amount:
-            if (not dated_pairs.filter(first_user=users_with_no_pair[x], second_user=[x+1]).exists()):
-                result.append([users_with_no_pair[x], users_with_no_pair[x+1]])
+        if (no_pair_amount % 2) == 1:
+            result.append([users_with_no_pair.pop(), User.objects.get(id=64)])
+
+        while x <= no_pair_amount:
+            if not dated_pairs.filter(first_user=users_with_no_pair[x], second_user=users_with_no_pair[x + 1]).exists():
+                result.append([users_with_no_pair[x], users_with_no_pair[x + 1]])
             else:
                 result.append([users_with_no_pair[x], User.objects.get(id=64)])
-                result.append([users_with_no_pair[x+1], User.objects.get(id=64)])
+                result.append([users_with_no_pair[x + 1], User.objects.get(id=64)])
 
     return result
-
