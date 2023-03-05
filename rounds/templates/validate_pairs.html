@@ -4,41 +4,58 @@
 
 
 {% block content %}
+    <style>
+        table, th, td {
+            text-align: center;
+            border: 1px solid;
+        }
+
+        th {
+            height: 70px;
+            font-weight: bold;
+            text-align: center;
+            width: 10%;
+        }
+
+        tr {
+            width: 10px;
+        }
+    </style>
     <form action="save" method="post">
         {% csrf_token %}
         <table>
             <tr>
-                <td>
+                <th>
                     id
-                </td>
-                <td>
+                </th>
+                <th>
                     First user
-                </td>
-                <td>
+                </th>
+                <th>
                     Second user
-                </td>
+                </th>
             </tr>
 
 
             {% for pair in round %}
 
-            <tr>
-                <td>
-                    {{ forloop.counter }}.
-                </td>
-                <td>
-                    {{ pair.0.first_name }} {{ pair.0.second_name }}
-                    <input id="first_user" type="text" name="first_user" maxlength="30" size="30" required
-                    value="{{ pair.0.id }}"
-                    readonly hidden>
-                </td>
-                <td>
-                    {{ pair.1.first_name }} {{ pair.1.second_name }}
-                    <input id="second_user" type="text" name="second_user" maxlength="30" size="30" required
-                    value="{{ pair.1.id }}"
-                    readonly hidden>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        {{ forloop.counter }}.
+                    </td>
+                    <td>
+                        {{ pair.0.first_name }} {{ pair.0.second_name }}
+                        <input id="first_user" type="text" name="first_user" maxlength="30" size="30" required
+                               value="{{ pair.0.id }}"
+                               readonly hidden>
+                    </td>
+                    <td>
+                        {{ pair.1.first_name }} {{ pair.1.second_name }}
+                        <input id="second_user" type="text" name="second_user" maxlength="30" size="30" required
+                               value="{{ pair.1.id }}"
+                               readonly hidden>
+                    </td>
+                </tr>
             {% endfor %}
 
         </table>
@@ -53,8 +70,8 @@
             <input type="submit" value="save round">
         </p>
 
-    НЕ РАСПРЕДЕЛЕНЫ:
-    <br>
+        НЕ РАСПРЕДЕЛЕНЫ:
+        <br>
         {% for user in users_with_no_pair %}
             {{ user.first_name }}
             {{ user.second_name }}
