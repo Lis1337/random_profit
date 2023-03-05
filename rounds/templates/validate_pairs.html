@@ -22,11 +22,14 @@
             </td>
             <td>
                 <input id="first_user" type="text" name="first_user" maxlength="30" size="30" required 
+{#                value="{{ pair.0.id }}"#}
                 value="{{ pair.0.id }}"
                 readonly>
             </td>
             <td>
                 <input id="second_user" type="text" name="second_user" maxlength="30" size="30" required 
+{#                value="{{ pair.1.id }}"#}
+
                 value="{{ pair.1.id }}"
                 readonly>
             </td>
@@ -36,12 +39,20 @@
     </table>
 
     <p>
-        Starts at: <input id="starts_at" type="date" name="starts_at" value="2022-09-01">
+        Starts at: <input id="starts_at" type="date" name="starts_at" value="2023-01-22">
     </p>
     <p>
-        Ends at: <input id="ends_at" type="date" name="ends_at" value="2022-09-01">
+        Ends at: <input id="ends_at" type="date" name="ends_at" value="2023-01-22">
     </p>
     <p>
         <input type="submit" value="save round">
     </p>
+
+НЕ РАСПРЕДЕЛЕНЫ:
+<br>
+    {% for user in users_with_no_pair %}
+        {{ user.first_name }}
+        {{ user.second_name }}
+        <br>
+    {% endfor %}
 </form>
