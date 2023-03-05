@@ -1,11 +1,12 @@
+import json
+from datetime import date
+
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
-from .models import Round
-from .forms import PairForm
 from users.models import User, Pairs
-
-import json
+from .forms import PairForm
+from .models import Round
 
 
 def make_round() -> tuple:
@@ -73,11 +74,13 @@ def validate_round(request) -> HttpResponse:
     else:
         form = PairForm()
 
+    cur_date = date.today().strftime("%Y-%m-%d")
     return render(request, 'validate_pairs.html',
                   {
                       'form': form,
                       'round': round,
-                      'users_with_no_pair': users_with_no_pair
+                      'users_with_no_pair': users_with_no_pair,
+                      'cur_date': cur_date
                   })
 
 
