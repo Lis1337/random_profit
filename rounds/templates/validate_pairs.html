@@ -21,17 +21,16 @@
                 {{ forloop.counter }}.
             </td>
             <td>
-                <input id="first_user" type="text" name="first_user" maxlength="30" size="30" required 
-{#                value="{{ pair.0.id }}"#}
+                {{ pair.0.first_name }} {{ pair.0.second_name }}
+                <input id="first_user" type="text" name="first_user" maxlength="30" size="30" required
                 value="{{ pair.0.id }}"
-                readonly>
+                readonly hidden>
             </td>
             <td>
-                <input id="second_user" type="text" name="second_user" maxlength="30" size="30" required 
-{#                value="{{ pair.1.id }}"#}
-
+                {{ pair.1.first_name }} {{ pair.1.second_name }}
+                <input id="second_user" type="text" name="second_user" maxlength="30" size="30" required
                 value="{{ pair.1.id }}"
-                readonly>
+                readonly hidden>
             </td>
         </tr>
         {% endfor %}
