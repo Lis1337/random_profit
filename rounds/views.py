@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 from .models import Round
@@ -8,7 +8,7 @@ from users.models import User, Pairs
 import json
 
 
-def make_round():
+def make_round() -> tuple:
     users = User.objects.all()
     participants = users.filter(is_included=1)
     dated_pairs = Pairs.objects.all()
@@ -54,14 +54,14 @@ def make_round():
     return result, users_with_no_pair
 
 
-def get_round(request, round_id):
+def get_round(request, round_id) -> HttpResponse:
     round_json = Round.objects.get(id=round_id).participants
     round = json.loads(round_json)
 
     return render(request, "round.html", {"round": round})
 
 
-def validate_round(request):
+def validate_round(request) -> HttpResponse:
     round, users_with_no_pair = make_round()
 
     if request.method == 'POST':
@@ -81,7 +81,7 @@ def validate_round(request):
                   })
 
 
-def save(request):
+def save(request) -> HttpResponseRedirect:
     first_user_ids = request.POST.getlist('first_user')
     second_user_ids = request.POST.getlist('second_user')
     starts_at = request.POST.get('starts_at')
@@ -109,7 +109,7 @@ def save(request):
     return HttpResponseRedirect('/rounds/{:n}'.format(round_id))
 
 
-def distribute_remainders(users_with_no_pair: list | None, dated_pairs):
+def distribute_remainders(users_with_no_pair: list | None, dated_pairs) -> list:
     result = []
     no_pair_amount = len(users_with_no_pair)
 
