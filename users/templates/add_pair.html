@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="/users/pairs/save/" method="post">
+    {% csrf_token %}
+    First user:
+    <select name="first_user_id">
+        <input>
+        {% for user in users %}
+            <option value="{{ user.id }}" size="100">{{ user.first_name }} {{ user.second_name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+
+    Second user:
+    <select name='second_user_id'>
+        {% for user in users %}
+            <option value="{{ user.id }}" size="100">{{ user.first_name }} {{ user.second_name }}</option>
+        {% endfor %}
+    </select>
+
+
+    <br>
+    <br>
+    <input type="submit" value="save form">
+</form>
+
+{% endblock content %}
+
