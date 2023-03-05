@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'rounds'
+    'rounds',
+    'random_profit',
 ]
 
 MIDDLEWARE = [

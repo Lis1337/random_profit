@@ -12,17 +12,8 @@
     </head>
     <body>
 
+    {% block content %}
 
-        <main>
-            <div class="container">
-                {% block content %}
-
-                    {{ round }}
-
-                {% endblock content %}
-            </div>
-        </main>
-
-        
+    {% endblock %}
     </body>
 </html>
